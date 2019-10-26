@@ -83,3 +83,125 @@ vector<string> binGenerator(string bin) {
 	return temp;
 }
 
+//Chuyen tu Normal term sang Minterm va Bin
+//input: dang normal term (vd: ab + bc), output: minterm va bin tuong ung
+void toMinTerm(string str, vector<int>& minterm, vector<string>& bins) {
+	vector<string> stack(0);
+	vector<string> stackBin(0);
+	string temp = "";
+
+	for (int i = 0; i < str.length(); i++) {
+		if (str[i] != ' ' && str[i] != '+') {
+			temp += str[i];
+		}
+		else {
+			if (temp == "") continue;
+			stack.push_back(temp);
+			temp = "";
+		}
+	}
+	stack.push_back(temp);
+
+	while (stack.size() > 0) {
+		temp = stack.back();
+		stack.pop_back();
+		string bin = "";
+
+		for (int i = 0, j = 0; i < temp.length(); j++, i++) {
+			if (temp[i] != '\'') {
+				if (temp[i] == token[j] && temp[i + 1] != '\'') {
+					bin += '1';
+				}
+				else if (temp[i] == token[j] && temp[i + 1] == '\'') {
+					bin += '0';
+					i++;
+				}
+				else {
+					bin += '2';
+					i--;
+				}
+			}
+		}
+
+		while (bin.length() < n) {
+			bin += '2';
+		}
+
+		vector<string> binList = binGenerator(bin);
+		for (int i = 0; i < binList.size(); i++) {
+			minterm.push_back(binToDec(binList[i]));
+			bins.push_back(binList[i]);
+		}
+	}
+}
+
+//Phan chia cac group Bin theo so 1
+//Input: list Bin, output: List group cac bin da phan chia
+vector<vector<string>> divideToGroup(vector<string> bin) {
+	vector<vector<string>> group(10);
+	int count = 0;
+
+	for (int i = 0; i < bin.size(); i++) {
+		count = 0;
+		for (int j = 0; j < bin[i].length(); j++) {
+			if (bin[i][j] == '1') count++;
+		}
+
+		group[count].push_back(bin[i]);
+	}
+
+	return group;
+}
+
+//So sanh 2 Bin tim 1 bit duy nhat khac nhau (vd: 0101, 0001 => 0_01)
+//Input: 2 Bin can so sanh, output: tra ve vi tri khac biet duy nhat (neu ko co tra ve -1)
+int compareBit(string a, string b) {
+	int index = -1;
+
+	for (int i = 0; i < a.length(); i++) {
+		if (a[i] != b[i]) {
+			if (index == -1) index = i;
+			else return -1;
+		}
+	}
+
+	return index;
+}
+
+//Danh dau bit duy nhat khac nhau trong 2 bin giua cac group
+//Input: Group cac Bin, output: Nhung Bin da doc danh dau va ko danh dau
+vector<string> markBit(vector<vector<string>> group) {
+	vector<string> result(0);
+	unordered_set<string> set;
+
+	for (int i = 0; i < group.size() - 1; i++) {
+		if (group[i].size() == 0 || group[i + 1].size() == 0) {
+			continue;
+		}
+
+		int index;
+		for (int j = 0; j < group[i].size(); j++) {
+			for (int k = 0; k < group[i + 1].size(); k++) {
+				index = compareBit(group[i][j], group[i + 1][k]);
+				if (index != -1) {
+					string temp = group[i][j];
+					temp[index] = '2';
+					set.insert(group[i][j]);
+					set.insert(group[i + 1][k]);
+					result.push_back(temp);
+				}
+			}
+		}
+	}
+
+	//Them cac Bin con lai vao result
+	for (int i = 0; i < group.size(); i++) {
+		for (int j = 0; j < group[i].size(); j++) {
+			if (set.find(group[i][j]) == set.end()) {
+				result.push_back(group[i][j]);
+			}
+		}
+	}
+
+	return result;
+}
