@@ -337,6 +337,7 @@ string toEPIString(vector<string> pi) {
 }
 
 //Lay do dai cua cong thuc da thuc toi tieu dang normal term (ko bao gom '+' hoac ' ' hoac ')
+//Input: EPI String, Output: length cua EPI String 
 int getEPIStringLength(string epi) {
 	int length = 0;
 	for (int i = 0; i < epi.length(); i++) {
@@ -369,4 +370,40 @@ vector<string> minEPIString(vector<vector<string>> listEPI) {
 	}
 
 	return listEPIString;
+}
+
+void boolSolver() {
+	vector<string> bins(0);
+	vector<int> minterm(0);
+
+	cout << "Nhap so bien: ";
+	cin >> n;
+	string expression;
+	cin.ignore(1);
+	cout << "Nhap ham bool (bat dau tu a, b, c,...): \n>> ";
+	getline(cin, expression);
+
+	toMinTerm(expression, minterm, bins); //lay minterm, bin list tu normal term
+	//Xoa nhung Bin hay minterm trung nhau
+	deleteRepeat(bins);
+	deleteRepeat(minterm);
+
+	vector<vector<string>> group;
+
+	//Thuat toan tim cac PI
+	for (int i = 1; i < n; i++) {
+		group = divideToGroup(bins);
+		bins = markBit(group);
+		deleteRepeat(bins);
+	}
+
+	//Loc ra cac EPI, tim cong thuc da thuc toi tieu
+	vector<vector<string>> listEPI = epiFilter(bins, minterm);
+
+	vector<string> listMinEPIString = minEPIString(listEPI);
+
+	cout << "\nCac cong thuc da thuc toi tieu la: \n";
+	for (int i = 0; i < listMinEPIString.size(); i++) {
+		cout << listMinEPIString[i] << endl;
+	}
 }
