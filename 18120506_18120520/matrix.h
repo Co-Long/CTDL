@@ -25,17 +25,17 @@ public:
 
 	unsigned short getRow();
 	unsigned short getCol();
-	float getMa(int row, int col);
-	void setMa(int row, int col, float n);
+	float getMa(unsigned short row, unsigned short col);
+	void setMa(unsigned short row, unsigned short col, float n);
 
-	void matrixRandom();  //Tạo giá trị ngẫu nhiên cho ma trận
+	void matrixRandom(unsigned short row, unsigned short col);  //Tạo giá trị ngẫu nhiên cho ma trận
 	void matrixInput();	//Nhập giá trị cho ma trận
-	void matrixInput(int row, int col);
+	void matrixInput(unsigned short row, unsigned short col);
 	void matrixOutput();
 
-	void swapRow(int row1, int row2);	//Hoán vị 2 dòng của ma trận
+	void swapRow(unsigned short row1, unsigned short row2);	//Hoán vị 2 dòng của ma trận
 
-	friend Matrix Gauss(Matrix& a);		//Trả về ma trận bậc thang
+	friend Matrix Gauss(Matrix &a);		//Trả về ma trận bậc thang
 	friend Matrix Gauss(Matrix& a, int &nswap);		//Trả về ma trận bậc thang và số lần hoán vị dòng
 	friend Matrix GauJor(Matrix& a);	//Trả về ma trận bậc thang rút gọn
 	friend Matrix inverse(Matrix& a);

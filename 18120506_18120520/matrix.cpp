@@ -88,7 +88,24 @@ Matrix& Matrix::operator=(const Matrix& src) {
 	return *this;
 }
 
-void Matrix::matrixRandom() {
+void Matrix::matrixRandom(unsigned short row, unsigned short col) {
+	//Kiểm tra nếu ma trận không rỗng thì xóa vùng nhớ cũ
+	if (this->row != 0 || this->col != 0) {
+		for (int i = 0; i < row; i++) {
+			ma[i].clear();
+			ma[i].shrink_to_fit();
+		}
+		ma.clear();
+		ma.shrink_to_fit();
+	}
+	//Cấp phát vùng nhớ mới
+	this->row = row;
+	this->col = col;
+	ma.resize(row);
+	for (int i = 0; i < row; i++) {
+		ma[i].resize(col, 0);
+	}
+	//Tạo dữ liệu
 	srand((int)time(0));
 	for (int i = 0; i < row; i++) {
 		for (int j = 0; j < col; j++) {
@@ -115,7 +132,7 @@ void Matrix::matrixInput() {
 	}
 }
 
-void Matrix::matrixInput(int row, int col) {
+void Matrix::matrixInput(unsigned short row, unsigned short col) {
 	//Kiểm tra nếu ma trận không rỗng thì xóa vùng nhớ cũ
 	if (this->row != 0 || this->col != 0) {
 		for (int i = 0; i < row; i++) {
@@ -161,14 +178,14 @@ unsigned short Matrix::getRow() {
 unsigned short Matrix::getCol() {
 	return col;
 }
-float Matrix::getMa(int row, int col) {
+float Matrix::getMa(unsigned short row, unsigned short col) {
 	return ma[row][col];
 }
-void  Matrix::setMa(int row, int col, float n) {
+void  Matrix::setMa(unsigned short row, unsigned short col, float n) {
 	ma[row][col] = n;
 }
 
-void Matrix::swapRow(int row1, int row2) {
+void Matrix::swapRow(unsigned short row1, unsigned short row2) {
 	if (row1 >= row || row2 >= row) {
 		cout << "Your row is out of range" << endl;
 		return;
@@ -183,7 +200,7 @@ void Matrix::swapRow(int row1, int row2) {
 
 Matrix Gauss(Matrix &a) {
 	Matrix g(a);
-	int c = 0;
+	unsigned short c = 0;
 
 	for (int r = 0;;) {
 
@@ -227,7 +244,7 @@ Matrix Gauss(Matrix &a) {
 
 Matrix Gauss(Matrix& a, int &nswap) {
 	Matrix g(a);
-	int c = 0;
+	unsigned short c = 0;
 	nswap = 0;
 	for (int r = 0;;) {
 
@@ -272,7 +289,7 @@ Matrix Gauss(Matrix& a, int &nswap) {
 		
 Matrix GauJor(Matrix& a) {
 	Matrix g(a);
-	int c = 0;
+	unsigned short c = 0;
 
 	for (int r = 0;;) {
 
@@ -321,7 +338,7 @@ Matrix GauJor(Matrix& a) {
 unsigned short rk(Matrix& a) {
 	Matrix g(a.row, a.col);
 	g = Gauss(a);
-	int ra = 0;
+	unsigned short ra = 0;
 	for (int i = 0; i < g.row; i++) {
 		for (int j = 0; j < g.col; j++) {
 			if (g.ma[i][j] != 0) {
@@ -348,7 +365,7 @@ Matrix inverse(Matrix& a) {
 
 	Matrix g(a);
 	Matrix v(a.row);
-	int c = 0;
+	unsigned short c = 0;
 
 	for (int r = 0;;) {
 
