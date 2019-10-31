@@ -9,7 +9,7 @@ Matrix::Matrix() {
 	col = 0;
 }
 
-Matrix::Matrix(int n) {
+Matrix::Matrix(unsigned short n) {
 	row = n;
 	col = n;
 	ma.resize(row);
@@ -118,20 +118,6 @@ void Matrix::matrixRandom(unsigned short row, unsigned short col) {
 	}
 }
 
-void Matrix::matrixInput() {
-	if (row == 0 || col == 0) {
-		cout << "Matrix is empty" << endl;
-		return;
-	}
-		
-	for (int i = 0; i < row; i++) {
-		for (int j = 0; j < col; j++) {
-			cout << "(" << i + 1 << "," << j + 1 << "): ";
-			cin >> ma[i][j];
-		}
-	}
-}
-
 void Matrix::matrixInput(unsigned short row, unsigned short col) {
 	//Kiểm tra nếu ma trận không rỗng thì xóa vùng nhớ cũ
 	if (this->row != 0 || this->col != 0) {
@@ -203,7 +189,7 @@ Matrix Gauss(Matrix &a) {
 	unsigned short c = 0;
 
 	for (int r = 0;;) {
-
+		//Nếu vị trí (r,c) bằng 0 thì dò xem trên cột c có vị trí nào khác 0 thì đổi chỗ 2 hàng
 		if (g.ma[r][c] == 0) {
 			int k = r + 1;
 			for (; k < g.row;k++ ) {
@@ -214,14 +200,14 @@ Matrix Gauss(Matrix &a) {
 				}
 	
 			}
-
+			//Nếu trên toàn bộ cột c không có phần tử khác 0 thì xét cột c+1
 			if(k>=g.row)
 				c = c + 1;
 		}
 
 		if (r >= g.row || c >= g.col)
 			break;
-
+		//Tiến hành bán chuẩn hóa
 		if (g.ma[r][c] != 0) {
 			int k = r + 1;
 			for (; k < g.row; k++) {
@@ -233,7 +219,7 @@ Matrix Gauss(Matrix &a) {
 				}
 			}
 		}
-
+		//Bán chuẩn hóa xong vị trí (r,c)thì tăng dòng, tăng cột
 		c = c + 1;
 		r = r + 1;
 		if (r >= g.row || c >= g.col)
@@ -247,7 +233,7 @@ Matrix Gauss(Matrix& a, int &nswap) {
 	unsigned short c = 0;
 	nswap = 0;
 	for (int r = 0;;) {
-
+		//Nếu vị trí (r,c) bằng 0 thì dò xem trên cột c có vị trí nào khác 0 thì đổi chỗ 2 hàng
 		if (g.ma[r][c] == 0) {
 			int k = r + 1;
 			for (; k < g.row; k++) {
@@ -259,14 +245,14 @@ Matrix Gauss(Matrix& a, int &nswap) {
 				}
 
 			}
-
+			//Nếu trên toàn bộ cột c không có phần tử khác 0 thì xét cột c+1
 			if (k >= g.row)
 				c = c + 1;
 		}
 
 		if (r >= g.row || c >= g.col)
 			break;
-
+		//Tiến hành bán chuẩn hóa
 		if (g.ma[r][c] != 0) {
 			int k = r + 1;
 			for (; k < g.row; k++) {
@@ -278,7 +264,7 @@ Matrix Gauss(Matrix& a, int &nswap) {
 				}
 			}
 		}
-
+		//Bán chuẩn hóa xong vị trí (r,c)thì tăng dòng, tăng cột
 		c = c + 1;
 		r = r + 1;
 		if (r >= g.row || c >= g.col)
@@ -292,7 +278,7 @@ Matrix GauJor(Matrix& a) {
 	unsigned short c = 0;
 
 	for (int r = 0;;) {
-
+		//Nếu vị trí (r,c) bằng 0 thì dò xem trên cột c có vị trí nào khác 0 thì đổi chỗ 2 hàng
 		if (g.ma[r][c] == 0) {
 			int k = r + 1;
 			for (; k < g.row; k++) {
@@ -303,14 +289,14 @@ Matrix GauJor(Matrix& a) {
 				}
 
 			}
-
+			// Nếu trên toàn bộ cột c không có phần tử khác 0 thì xét cột c + 1
 			if (k >= g.row)
 				c = c + 1;
 		}
 
 		if (r >= g.row || c >= g.col)
 			break;
-
+		//Tiến hành chuẩn hóa tại vị trí (r,c)
 		if (g.ma[r][c] != 0) {
 			int k = 0;
 			for (; k < g.row; k++) {
@@ -326,7 +312,7 @@ Matrix GauJor(Matrix& a) {
 				}
 			}
 		}
-
+		//Chuẩn hóa xong vị trí (r,c)thì tăng dòng, tăng cột
 		c = c + 1;
 		r = r + 1;
 		if (r >= g.row || c >= g.col)
@@ -351,22 +337,26 @@ unsigned short rk(Matrix& a) {
 }
 
 Matrix inverse(Matrix& a) {
+	//Kiểm tra ma trận có phải là ma trận vuông không
 	if ((a.row != a.col)|| (a.row == 0 || a.col == 0)) {
 		cout << endl;
 		cout << "matrix doesn't have inverse" << endl;
 		return a;
 	}
+	//Tính hạng của ma trận
 	unsigned short ra = rk(a);
+	//Nếu hạng của ma trận khác số cột thì không phải ma trận khả nghịch
 	if (ra != a.col) {
 		cout << endl;
 		cout << "matrix doesn't have inverse" << endl;
 		return a;
 	}
-
+	//Tạo ma trận g = a và ma trận đơn vị v
 	Matrix g(a);
 	Matrix v(a.row);
 	unsigned short c = 0;
-
+	//Thực hiện phép khử Gauss-Jordan để đưa ma trận g về ma trận bậc thang rút gọn
+	//Sau khi ma trận g trở thanh ma trận bậc thang rút gọn thì ma trận v chính là ma trận khả nghịch cần tìm
 	for (int r = 0;;) {
 
 		if (g.ma[r][c] == 0) {
@@ -427,24 +417,26 @@ Matrix trans(Matrix& a) {
 }
 
 float det(Matrix& a) {
+	//Kiểm tra ma trận vuông (Điều kiện để tính det)
 	if ((a.col != a.row) || (a.row == 0 || a.col == 0)) {
 		cout << "unable to calculate det " << endl;
 		return 0;
 	}
 
 	Matrix b(a.col, a.row);
-	float d = 1;
-	int nswap = 0;
+	float d = 1;	//Định thức của ma trận
+	int nswap = 0;	//Số lần hoán vị dòng
 	unsigned char i = 0;
 	unsigned char j = 0;
-	b = Gauss(a,nswap);
+	b = Gauss(a,nswap);	//Thực hiện phép khử Gauss đưa ma trận thành ma trận tam giác
 	
+	//Định thức bằng tích các phần tử nằm trên đường chéo chính của ma trận tam giác
 	while (i < b.row && j<b.col ) {
 		d = d * b.ma[i][j];
 		i++;
 		j++;
 	}
-
+	//Nếu số lần hoán vị lẻ thì đổi dấu định thức
 	if (nswap % 2 == 1) {
 		return -d;
 	}
@@ -464,6 +456,7 @@ Matrix multiMatrix(Matrix& a, Matrix& b) {
 	Matrix g(a.row, b.col);
 	for (int i = 0; i < a.row; i++) {
 		for (int j = 0; j < b.col; j++) {
+			//Vector dòng i nhân vector cột j
 			float sum = 0;
 			for (int k = 0; k < a.col; k++) {
 				sum = sum + a.ma[i][k] * b.ma[k][j];
@@ -477,14 +470,14 @@ Matrix multiMatrix(Matrix& a, Matrix& b) {
 void multiMatrix() {
 	Matrix a, b;
 	int r, c;
-
+	//Nhập ma trận A
 	cout << "==== Ma tran A ====" << endl;
 	cout << "Row= ";
 	cin >> r;
 	cout << "Col= ";
 	cin >> c;
 	a.matrixInput(r, c);
-
+	//Nhập ma trận B
 	cout << "==== Ma tran B ====" << endl;
 	cout << "Row= ";
 	cin >> r;
@@ -496,6 +489,7 @@ void multiMatrix() {
 	a.matrixOutput();
 	b.matrixOutput();
 	cout << "AxB= " << endl;
+	//Tính và xuất ra màn hình tích của 2 ma trận A và B
 	multiMatrix(a, b).matrixOutput();
 }
 

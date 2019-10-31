@@ -16,7 +16,7 @@ private:
 public:
 	
 	Matrix();
-	Matrix(int n);	//Tạo ma trận đơn vị cấp n
+	Matrix(unsigned short n);	//Tạo ma trận đơn vị cấp n
 	Matrix(const Matrix& src);
 	Matrix(unsigned short row, unsigned short col);	//Tạo ma trận kích thước width x height
 	~Matrix();
@@ -29,7 +29,6 @@ public:
 	void setMa(unsigned short row, unsigned short col, float n);
 
 	void matrixRandom(unsigned short row, unsigned short col);  //Tạo giá trị ngẫu nhiên cho ma trận
-	void matrixInput();	//Nhập giá trị cho ma trận
 	void matrixInput(unsigned short row, unsigned short col);
 	void matrixOutput();
 
@@ -40,12 +39,12 @@ public:
 	friend Matrix GauJor(Matrix& a);	//Trả về ma trận bậc thang rút gọn
 	friend Matrix inverse(Matrix& a);
 	friend Matrix trans(Matrix& a);		//Trả về ma trận chuyển vị 
-	friend Matrix multiMatrix(Matrix& a, Matrix& b);	//Nhân 2 ma trận
+	friend Matrix multiMatrix(Matrix& a, Matrix& b);	//Tính và trả về ma trận C(m*p) là kết quả của ma trận A(m*n) nhân ma trận B(n*p)
 	friend unsigned short rk(Matrix& a);	//Trả về hạng của ma trận
 	friend float det(Matrix& a);
 };
 
-void multiMatrix();
+void multiMatrix();	//Cho người dùng nhập 2 ma trận A,B. Tính và xuất ra màn hình tích của 2 ma trận A và B
 void SLE();	// System of Linear Equations
 
 
